@@ -7,7 +7,17 @@
                     <th>Nom</th>
                     <th>Prix</th>
                     <th>Stock</th>
-                    <th>Commandés</th>
+                    <th>Commandes</th>
+                </tr>
+                    <tr v-if="!data.listeProduits">
+                    <td colspan="4">Veuillez patienter, chargement des produits...</td>
+                </tr>
+                <!-- Si le tableau des catégories n'est pas vide -->
+                <tr v-for="produit in data.listeProduits" :key="produit.code">
+                    <td>{{ produit.nom }}</td>
+                    <td>{{ produit.prix }}</td>
+                    <td>{{ produit.unitesEnStock }}</td>
+                     <td>{{ produit.unitesCommandees }}</td>
                 </tr>
             </table>
         </div>
@@ -15,7 +25,16 @@
  </template>
 
 <script setup>
-
+function chargeCategories() {
+    // Appel à l'API pour avoir la liste des catégories
+    // Trié par code, descendant
+    // Verbe HTTP GET par défaut
+    doAjaxRequest(BACKEND + "/api/categories?sort=code,desc")
+        .then((json) => {
+            data.listeCategories = json._embedded.categories;
+        })
+        .catch((error) => alert(error.message));
+}
 
 </script>
 
